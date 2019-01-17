@@ -1,0 +1,31 @@
+<% include ./partials/_header.ejs %>
+
+
+<head>
+    <title>TinyApp</title>
+</head>
+
+    <body>
+    <!-- Add your EJS code here -->
+ 
+        <ul>
+            <% for (let urlKey in urls) { %>
+                <li>
+                    <%= urlKey %> -
+                    <%= urls[urlKey]%>
+                    <a href="/urls/<%= urlKey %>">
+                    <button type="submit">Edit Me!</button>
+                    </a>
+
+                    <form method="POST" action="/urls/<%= urlKey %>/delete">
+                    <button type="submit">Delete Me!</button>
+
+                    </form>
+                </li>
+            <% }; %>
+        </ul>
+        <a href='/urls/new'>Add new link </a>
+
+    </body>
+
+</html>
