@@ -1,31 +1,32 @@
-<% include ./partials/_header.ejs %>
-
-
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <title>TinyApp</title>
 </head>
+<body>
+    <% include ./partials/_header.ejs %>
 
-    <body>
-    <!-- Add your EJS code here -->
+
  
+    <h2>Titles- Tiny App </h2>
         <ul>
             <% for (let urlKey in urls) { %>
                 <li>
                     <%= urlKey %> -
                     <%= urls[urlKey]%>
+
                     <a href="/urls/<%= urlKey %>">
-                    <button type="submit">Edit Me!</button>
+                        <button type="submit">Edit Me!</button>
                     </a>
 
                     <form method="POST" action="/urls/<%= urlKey %>/delete">
-                    <button type="submit">Delete Me!</button>
-
+                        <button type="submit">Delete Me!</button> <!---w2d3 task Exercise-->
                     </form>
                 </li>
             <% }; %>
         </ul>
-        <a href='/urls/new'>Add new link </a>
+        <a href='/urls/new'>Add New link </a>
 
-    </body>
+</body>
+
 
 </html>

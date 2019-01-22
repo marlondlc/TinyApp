@@ -1,10 +1,30 @@
-
-<!DOCTYPE html>
-<html lang="eng">
-<head>
-<title> TinyApp </title>
+<!-- task6 -->
+<!-- if the user obj is not undefined (exist) -> display welcome email and login -->
+<!-- if the user is undefined display the login and regist links -> display welcome email and login -->
 
 
-</head>
 
+<header>
+    <% if (typeof user !== "undefined")  {%> 
+        <div>welcome <%=user.email%> </div>
+        <div><!-- "DIV" is a box on the browser-->
+            <form method = "post" action="/logout">
+                <input type = "submit" value = "Logout">
+            </form>
+        </div>
+        <% } else { %>
+            <a href="/login">Login</a> |<!-- TASK 8 W2D4-->
+            <a href="/register">Register</a> <!-- TASK 8 W2D4-->
+            <% }%>
+    
+</header>
+
+
+
+
+<!-- task6 -->
+
+
+
+<!--notes: -->
 

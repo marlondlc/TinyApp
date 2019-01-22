@@ -1,12 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head></head>
+<% include ./partials/_header %>
+
+
   <body style="font-size:20px; padding:50px;">
 
-    <% include partials/_header %>
     <header>TinyApp</header>
 
-    <form action="/urls/short" method="POST" style="margin:150px;">
+    <form action="/urls" method="POST" style="margin:150px;">
       <label for="longURL">Comment:</label>
       <input id="longURL" type="text" name="longURL" placeholder="http://" style="width: 300px">
       <button type="edit">Create your URL</button>
@@ -16,4 +15,4 @@
 
 
 
-<--! comment example <form method="POST" action="/urls/9sm5xK/delete">...</form> -->
+
