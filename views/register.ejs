@@ -1,22 +1,17 @@
 
 <html lang="en">
-<head></head>
   <body style="font-size:20px; padding:50px;">
+  <header>TinyApp</header>
   <% include ./partials/_header.ejs %>
-      <header>TinyApp</header>
       <h2>Registeration Form</h2>
-
-            <form action="/register" method="POST" style="margin:150px;">
-                    <input type="email" name="email" placeholder="JohnDoe@tinyapp.com" style="width: 300px">
-                    <input id="password" name="password" placeholder="Create Password" style="width: 300px">
-                <button type="submit">submit</button>
-            </form>
-  
-            
+            <form action="/register" method="POST" style="margin:50px;">
+                    <label>Email:</label>
+                    <input type="email" name="email" placeholder="JohnDoe@tinyapp.com" style="width: 200px">
+                    <label>Password:</label>
+                    <input id="password" name="password" placeholder="Create Password" style="width: 200px">
+                <button style="margin:auto" type="submit">Register</button>
+            </form>    
     </body>
-
-
-
 </html>
 
 

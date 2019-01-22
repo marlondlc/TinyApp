@@ -3,16 +3,15 @@
 <head>
 </head>
 <body>
+    <h2>Tiny App </h2>
     <% include ./partials/_header.ejs %>
-
-
- 
-    <h2>Titles- Tiny App </h2>
-        <ul>
+    <body style="font-size:20px; padding:20px;">
+        <ul> 
             <% for (let urlKey in urls) { %>
+            
                 <li>
                     <%= urlKey %> -
-                    <%= urls[urlKey]%>
+                    <%= urls[urlKey].longUrl%>
 
                     <a href="/urls/<%= urlKey %>">
                         <button type="submit">Edit Me!</button>
@@ -24,7 +23,13 @@
                 </li>
             <% }; %>
         </ul>
-        <a href='/urls/new'>Add New link </a>
+        <% if (typeof user !== "undefined")  {%> 
+        <a href='/urls/new'>Add New link </a> 
+        <% } else { %>
+            <div>____________________________________</div>
+            <div style="padding-top:10px;">Please Login or Register <br> - You must be logged in to view the list of URLs</div></table>
+            <div>____________________________________</div>
+        <%}%>
 
 </body>
 

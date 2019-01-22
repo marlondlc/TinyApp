@@ -6,7 +6,8 @@
 
 <header>
     <% if (typeof user !== "undefined")  {%> 
-        <div>welcome <%=user.email%> </div>
+        <div style="">Welcome, <br>
+        <%=user.email%> </div>
         <div><!-- "DIV" is a box on the browser-->
             <form method = "post" action="/logout">
                 <input type = "submit" value = "Logout">
@@ -16,7 +17,7 @@
             <a href="/login">Login</a> |<!-- TASK 8 W2D4-->
             <a href="/register">Register</a> <!-- TASK 8 W2D4-->
             <% }%>
-    
+            
 </header>
 
 

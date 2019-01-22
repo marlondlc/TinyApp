@@ -3,7 +3,7 @@
 
 const express = require("express");
 const app = express(); // this means the application is running with express NPM
-const PORT = 3000; // default port 8080
+const PORT = 8080; // default port 8080
 const uuidv1 = require("uuid/v1"); //feature to gen random number
 const cookieParser = require("cookie-parser");
 
@@ -39,7 +39,7 @@ const usersDB = {
   userRandomID: {
     id: "userRandomID",
     email: "user@example.com",
-    password: "purple-monkey-dinosaur"
+    password: "1234"
   },
   user2RandomID: {
     id: "user2RandomID",
@@ -114,6 +114,16 @@ function urlForUsers(id) {
   return filteredUrl;
 }
 
+//________________________________4th Function  -- add new Url_________________________________________________//
+
+function addNewUrl(shortUrl, longUrl, userId) {
+  urlDatabase[shortUrl] = {
+    shortUrl: shortUrl,
+    longUrl: longUrl,
+    userId: userId
+  };
+}
+
 //__________________________________END POINTS - SHOW THE WORK "GET"__________________________________________________________________//
 //Get =  route to show the form
 //Render = "res.render" will send the OBJ we created to the EJS file (ex. "urls_index")
@@ -128,10 +138,14 @@ app.get("/urls", (req, res) => {
   console.log(templateVars.user);
   res.render("urls_index", templateVars);
 });
+//___________________________
 //adding a GET route to show form
 app.get("/urls/new", (req, res) => {
-  let user = usersDB[req.cookies.user_id];
-  let templateVars = { user: req.cookies["user_id"] };
+  //let user = usersDB[req.cookies.user_id];
+
+  let templateVars = {
+    user: usersDB[req.cookies.user_id]
+  };
 
   // give me the url_new (render below)
   res.render("urls_new", templateVars);
@@ -143,7 +157,7 @@ app.get("/urls/:id", (req, res) => {
     //long url is trying to access  the [] in this ex. "http://www.lighthouselabs.ca"
     //[] = OBJECT [key] returns value- "http://...""
     shortUrl: req.params.id,
-    user: req.cookies["user_id"]
+    user: usersDB[req.cookies.user_id]
   };
   //[ req.params.id ] -- gives you back the id within the obj indicated before
   //console.log( urlDatabase[req.params.id ] )
@@ -184,15 +198,25 @@ app.get("/hello", (req, res) => {
   res.send("<html><body>Hello <b>World</b></body></html>\n");
 });
 */
+app.get("/urls.json", (req, res) => {
+  res.json(urlDatabase);
+});
 
 //____________________________POST END POINTS (add/delete/update)(ALL THE POSTS DO THE WORK)_____________________________________//
 
 app.post("/urls", (req, res) => {
-  let rNumber = generateRandomString();
+  // let rNumber = generateRandomString();
+  // urlDatabase[rNumber] = req.body.longURL;
 
-  //console.log( req.body );  // debug statement to see POST parameters
-  urlDatabase[rNumber] = req.body.longURL;
-  console.log(urlDatabase);
+  //-----DOMS EX.
+  //Dom used the below two which are the same as the above two
+  const longUrl = req.body.longURL;
+  const shortUrl = generateRandomString();
+
+  const userId = req.cookies["user_id"];
+  //const userId = req.session.user_Id;
+  addNewUrl(shortUrl, longUrl, userId);
+  //--------------------
   res.redirect("/urls"); // redirect you back to the home page. (ex "/url = home page ")
 });
 
@@ -212,7 +236,7 @@ app.post("/urls/:id/update", (req, res) => {
   //update the url in your URL-DB then redirect
   urlDatabase[shortUrl] = longUrl;
   console.log("longUrl", longUrl);
-  console.log("re.boy", req.body);
+  console.log("re.body", req.body);
   //its going to find the obj URL DB and replace its value by (longUrl)
   //redirect
   res.redirect("/urls");
@@ -264,10 +288,10 @@ app.post("/login", (req, res) => {
   console.log(req.body.email);
   if (email_password_empty) {
     // Task 5 w2d4 COMPASS
-    res.status(400).send("Please fill out the required feild");
+    res.status(403).send("Please fill out the required feild");
   } else if (!userIdDB) {
     // if no email please redirect to error msg
-    res.status(400).send("wrong credentials!");
+    res.status(403).send("wrong credentials!");
   } else {
     //now that we know email exist you need to compare PW
     if (usersDB[userIdDB].password === passwordForm) {
@@ -355,9 +379,6 @@ app.listen(PORT, () => {
 // names.push('Jordan');
 // console.log( names );
 //Console would show ['Jordan'] -it still allows us to change the value of the referenced variable
-
 //TASK 6//
-
 //same principle for the rest
-
 //curl -X POST "http://localhost:8080/urls/9sm5xK/delete"
