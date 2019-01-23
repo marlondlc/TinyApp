@@ -168,9 +168,7 @@ app.get("/urls/:id", (req, res) => {
   //console.log( urlDatabase[req.params.id ] )
   res.render("urls_show", templateVars);
 });
-//login --------> get------> show the login page
-//logout -------->get------> show the logout page
-//register ------>get------> show me the register page
+
 //------End point for managing the login
 
 app.get("/login", (req, res) => {
@@ -212,7 +210,7 @@ app.post("/urls", (req, res) => {
   // let rNumber = generateRandomString();
   // urlDatabase[rNumber] = req.body.longURL;
 
-  //-----DOMS EX.
+  //----- Example of another way of writing this code.
   //Dom used the below two which are the same as the above two
   const longUrl = req.body.longURL;
   const shortUrl = generateRandomString();

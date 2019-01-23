@@ -1,10 +1,17 @@
 <% include ./partials/_header %>
-<body style="font-size:20px; padding:20px;">
-<form action="/urls" method="POST" style="margin:150px;">
-<% if (typeof user !== "undefined")  {%> 
+
+<html>
+  <body style="font-size:20px; padding:20px;">
+    <form action="/urls" method="POST" style="margin:150px;">
       <label for="longURL">Comment:</label>
       <input id="longURL" type="text" name="longURL" placeholder="http://" style="width: 300px">
       <button type="edit">Create your URL</button>
     </form>
   </body>
 </html>
+
+
+
+
+
+

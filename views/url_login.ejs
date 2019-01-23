@@ -1,12 +1,9 @@
 
 <body style="font-size:20px; padding:20px;">
-<% include ./partials/_header %>
-
+    <% include ./partials/_header %>
     <h3>Login</h3>
         <form method="post" action="/login">
             <div style="width: 25em;" class="form-group">
-                <div class= "form-group">
-
                 <div class= "form-group">
                     <label style= "padding-right:44px">Email:</label>
                     <input type="text" name="email" placeholder= "JohnDoe@tinyApp.com">
@@ -15,11 +12,8 @@
                     <label style="padding-right:10px;">Password:</label>
                     <input type="password" name="password">
                 </div>
-            
             </div>
-            
-            <div><input type="submit" class="btn btn-primary" value="Sign In">
-            </div>
+            <div><input type="submit" class="btn btn-primary" value="Sign In"></div>
         </form>
 </body>
 
