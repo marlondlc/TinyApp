@@ -1,15 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-</head>
 <body>
-    <h2>Tiny App </h2>
     <% include ./partials/_header.ejs %>
-    <body style="font-size:20px; padding:20px;">
+    <body style="font-size:20px; padding-bottom:50px;">
         <ul> 
             <% for (let urlKey in urls) { %>
-            
-                <li>
+            <li>
                     <%= urlKey %> -
                     <%= urls[urlKey].longUrl%>
 
@@ -27,7 +23,7 @@
         <a href='/urls/new'>Add New link </a> 
         <% } else { %>
             <div>____________________________________</div>
-            <div style="padding-top:10px;">Please Login or Register <br> - You must be logged in to view the list of URLs</div></table>
+            <div style="padding-top:10px;">  Please Login or Register <br> - You must be logged in to view the list of URLs</div></table>
             <div>____________________________________</div>
         <%}%>
 

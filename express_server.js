@@ -5,7 +5,9 @@ const express = require("express");
 const app = express(); // this means the application is running with express NPM
 const PORT = 8080; // default port 8080
 const uuidv1 = require("uuid/v1"); //feature to gen random number
-const cookieParser = require("cookie-parser");
+//const cookieParser = require("cookie-parser");
+const cookieSession = require("cookie-session");
+const bcrypt = require("bcrypt");
 
 //__________________________MiddleWare__________________________________________________________________________________________//
 //middle ware definition = define app endpoints(uri's)//sends response back to the client // matches request routes using pattern expressions.
@@ -15,7 +17,13 @@ const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser"); // installed npm body-parser and linked it
 app.use(bodyParser.urlencoded({ extended: true })); //
 app.set("view engine", "ejs"); // ejs engine
-app.use(cookieParser());
+//app.use(cookieParser());
+app.use(
+  cookieSession({
+    name: "session",
+    keys: ["Key1", "Key2"]
+  })
+);
 
 //__________________DataBase Object __________________________________________________________________________________________//
 //This is where you are pulling info (check with mentor)
@@ -80,7 +88,6 @@ const createUser = (email, password) => {
   };
   // add a new user obj to the user db
   usersDB[userId] = newUser;
-  console.log("users:", usersDB);
   return userId;
 };
 
@@ -129,13 +136,13 @@ function addNewUrl(shortUrl, longUrl, userId) {
 //Render = "res.render" will send the OBJ we created to the EJS file (ex. "urls_index")
 // struct = get / post / update / delete
 app.get("/urls", (req, res) => {
-  const userId = req.cookies["user_id"];
-  //added the line above // this is what was there before let user = usersDB[req.cookies.user_id];
+  const userId = req.session["user_id"];
+  //added the line above // this is what was there before let user = usersDB[req.session.user_id];
   let templateVars = {
     urls: urlForUsers(userId),
-    user: usersDB[req.cookies.user_id]
+    user: usersDB[req.session.user_id]
   }; //2nd user is reffering to previous line
-  console.log(templateVars.user);
+
   res.render("urls_index", templateVars);
 });
 //___________________________
@@ -143,9 +150,7 @@ app.get("/urls", (req, res) => {
 app.get("/urls/new", (req, res) => {
   //let user = usersDB[req.cookies.user_id];
 
-  let templateVars = {
-    user: usersDB[req.cookies.user_id]
-  };
+  let templateVars = { user: usersDB[req.session.user_id] };
 
   // give me the url_new (render below)
   res.render("urls_new", templateVars);
@@ -157,12 +162,11 @@ app.get("/urls/:id", (req, res) => {
     //long url is trying to access  the [] in this ex. "http://www.lighthouselabs.ca"
     //[] = OBJECT [key] returns value- "http://...""
     shortUrl: req.params.id,
-    user: usersDB[req.cookies.user_id]
+    user: usersDB[req.session.user_id]
   };
   //[ req.params.id ] -- gives you back the id within the obj indicated before
   //console.log( urlDatabase[req.params.id ] )
   res.render("urls_show", templateVars);
-  console.log(templateVars);
 });
 //login --------> get------> show the login page
 //logout -------->get------> show the logout page
@@ -213,7 +217,7 @@ app.post("/urls", (req, res) => {
   const longUrl = req.body.longURL;
   const shortUrl = generateRandomString();
 
-  const userId = req.cookies["user_id"];
+  const userId = req.session["user_id"];
   //const userId = req.session.user_Id;
   addNewUrl(shortUrl, longUrl, userId);
   //--------------------
@@ -232,11 +236,10 @@ app.post("/urls/:id/update", (req, res) => {
   //extraxt info from url ID
   const shortUrl = req.params.id;
   // extract info from the form being submitted
-  const longUrl = req.body.longURLChangedName;
+  const longUrl = req.body.longURL;
   //update the url in your URL-DB then redirect
-  urlDatabase[shortUrl] = longUrl;
-  console.log("longUrl", longUrl);
-  console.log("re.body", req.body);
+  urlDatabase[shortUrl].longUrl = longUrl;
+
   //its going to find the obj URL DB and replace its value by (longUrl)
   //redirect
   res.redirect("/urls");
@@ -252,11 +255,10 @@ app.post("/register", (req, res) => {
   const email = req.body.email;
   const password = req.body.password;
   const email_password_empty = !email || !password;
-  console.log("email_password_empty:", email_password_empty); //output should be be an empty
-
+  const hashedPassword = bcrypt.hashSync(req.body.password, 10); //
+  console.log(hashedPassword);
   // If the e-mail or password are empty strings, send back a response with the 400 status code.
   // If someone tries to register with an existing user's email, send back a response with the 400 status code.
-  console.log("find user: ");
 
   if (email_password_empty) {
     // Task 5 w2d4 COMPASS
@@ -264,16 +266,13 @@ app.post("/register", (req, res) => {
   } else if (emailExist(email)) {
     res.status(400).send("User already exist. Please Login!");
   } else {
-    console.log("req.body", req.body);
-    console.log("email:", email, "password:", password);
     const userId = createUser(email, password);
-    console.log(createUser);
+
     //set the cookie with the userId
-    res.cookie("user_id", userId);
+    req.session.user_id = userId;
     // res.redirect to /urls
     res.redirect("/urls");
     // check the brower via dev mode under application to see if this works
-    console.log(userId);
   }
 });
 
@@ -285,7 +284,10 @@ app.post("/login", (req, res) => {
   const passwordForm = req.body.password;
   const email_password_empty = !email || !passwordForm;
   const userIdDB = emailExist(email);
-  console.log(req.body.email);
+  const hashedPassword = bcrypt.hashSync(req.body.password, 10);
+  const compSync = bcrypt.compareSync(req.body.password, hashedPassword);
+  console.log(compSync);
+
   if (email_password_empty) {
     // Task 5 w2d4 COMPASS
     res.status(403).send("Please fill out the required feild");
@@ -296,7 +298,7 @@ app.post("/login", (req, res) => {
     //now that we know email exist you need to compare PW
     if (usersDB[userIdDB].password === passwordForm) {
       // or req.body.password:
-      res.cookie("user_id", userIdDB);
+      req.session.user_id = userIdDB;
       // res.redirect to /urls
       res.redirect("/urls"); //After your server has set the cookie it should redirect the browser back to the /urls page.
 
@@ -310,7 +312,7 @@ app.post("/login", (req, res) => {
 app.post("/logout", (req, res) => {
   // it will wash your stamp off (remove the stamp) //TASK7-W2D2
   //remove the cookie from the user ID
-  res.clearCookie("user_id");
+  req.session = null;
   res.redirect("/urls");
 });
 
