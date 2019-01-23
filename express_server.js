@@ -29,6 +29,7 @@ app.use(
 //This is where you are pulling info (check with mentor)
 // When sending variables to an EJS template, you need to send them inside an object, even if you are only sending one variable
 //URL DATABASE
+
 var urlDatabase = {
   b2xVn2: {
     shortUrl: "b2xVn2",
@@ -183,6 +184,11 @@ app.get("/register", (req, res) => {
   res.render("register");
   //NEED TO ADD SOMETHING HERE FROM VIDEO // line 186/ line
 });
+// the below will redirect you to the webpage with the short URL corresponding to the long url
+app.get("/u/:id", (req, res) => {
+  const shortUrl = req.params.id;
+  res.redirect(urlDatabase[shortUrl].longUrl);
+});
 
 //____________________________________________________________________________________//
 //____________________________________________________________________________________//
@@ -254,7 +260,7 @@ app.post("/register", (req, res) => {
   const password = req.body.password;
   const email_password_empty = !email || !password;
   const hashedPassword = bcrypt.hashSync(req.body.password, 10); //
-  console.log(hashedPassword);
+
   // If the e-mail or password are empty strings, send back a response with the 400 status code.
   // If someone tries to register with an existing user's email, send back a response with the 400 status code.
 
@@ -284,7 +290,6 @@ app.post("/login", (req, res) => {
   const userIdDB = emailExist(email);
   const hashedPassword = bcrypt.hashSync(req.body.password, 10);
   const compSync = bcrypt.compareSync(req.body.password, hashedPassword);
-  console.log(compSync);
 
   if (email_password_empty) {
     // Task 5 w2d4 COMPASS
