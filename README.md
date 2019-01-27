@@ -4,8 +4,8 @@ Tiny App is the full stack web application built with node and express that allo
 
 ## Final Product
 
-
-
+- !["screenshot of Url Page"] (https://github.com/marlondlc/TinyApp/blob/master/docs/homePage.png)
+- !["screenshot of Registration Page"] (https://github.com/marlondlc/TinyApp/blob/master/docs/Registration.png)
 
 
 
