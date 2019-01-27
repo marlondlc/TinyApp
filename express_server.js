@@ -4,8 +4,8 @@ const PORT = 8080;
 const uuidv1 = require("uuid/v1");
 const cookieSession = require("cookie-session");
 const bcrypt = require("bcrypt");
-
 const bodyParser = require("body-parser");
+
 app.use(bodyParser.urlencoded({ extended: true }));
 app.set("view engine", "ejs");
 
@@ -16,7 +16,7 @@ app.use(
   })
 );
 
-var urlDatabase = {
+const urlDatabase = {
   b2xVn2: {
     shortUrl: "b2xVn2",
     longUrl: "http://www.lighthouselabs.ca",
